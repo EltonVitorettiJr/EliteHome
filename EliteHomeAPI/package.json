@@ -1,0 +1,22 @@
+{
+  "name": "elite-home-api",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "tsx watch ./src/http/server.ts"
+  },
+  "main": "index.js",
+  "author": {
+    "name": "Elton Antônio Vitoretti Junior",
+    "email": "eltonvitorettijr@gmail.com",
+    "url": "https://linkedin.com/in/elton-vitoretti-jr"
+  },
+  "description": "API de consumo para o frontend da aplicação EliteHome.",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "fastify": "^5.7.4",
+    "tsx": "^4.21.0"
+  }
+}

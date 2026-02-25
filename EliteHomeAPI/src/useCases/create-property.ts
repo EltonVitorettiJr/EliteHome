@@ -1,6 +1,7 @@
+import { knex } from "../database";
 import { Property } from "../entities/property";
 
-interface CreatePropertyUseCaseRequest {
+export interface CreatePropertyUseCaseRequest {
   name: string;
   totalValue: number;
   numberOfRooms: number;
@@ -9,19 +10,19 @@ interface CreatePropertyUseCaseRequest {
   size: string;
 }
 
-type CreatePropertyUseCaseResponse = {
+type CreatePropertyUseCaseReply = {
   property: Property;
 };
 
 export class CreatePropertyUseCase {
-  execute({
+  async execute({
     name,
     city,
     numberOfRooms,
     size,
     state,
     totalValue,
-  }: CreatePropertyUseCaseRequest): CreatePropertyUseCaseResponse {
+  }: CreatePropertyUseCaseRequest): Promise<CreatePropertyUseCaseReply> {
     const property = new Property({
       name,
       city,
@@ -31,6 +32,17 @@ export class CreatePropertyUseCase {
       totalValue,
     });
 
-    return { property };
+    const [createProperty] = await knex("properties")
+      .insert({
+        name: property.name,
+        total_value: property.totalValue,
+        number_of_rooms: property.numberOfRooms,
+        size: property.size,
+        city: property.city,
+        state: property.state,
+      })
+      .returning("*");
+
+    return createProperty;
   }
 }

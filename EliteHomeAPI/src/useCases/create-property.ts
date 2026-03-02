@@ -1,13 +1,16 @@
-import { knex } from "../database";
+import type { PropertiesRepositoryProps } from "../database/repositories/properties";
 import { Property } from "../entities/property";
 
 export interface CreatePropertyUseCaseRequest {
+  id?: string;
   name: string;
   totalValue: number;
   numberOfRooms: number;
   city: string;
   state: string;
   size: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 type CreatePropertyUseCaseReply = {
@@ -15,6 +18,8 @@ type CreatePropertyUseCaseReply = {
 };
 
 export class CreatePropertyUseCase {
+  constructor(private repository: PropertiesRepositoryProps) {}
+
   async execute({
     name,
     city,
@@ -32,17 +37,8 @@ export class CreatePropertyUseCase {
       totalValue,
     });
 
-    const [createProperty] = await knex("properties")
-      .insert({
-        name: property.name,
-        total_value: property.totalValue,
-        number_of_rooms: property.numberOfRooms,
-        size: property.size,
-        city: property.city,
-        state: property.state,
-      })
-      .returning("*");
+    const createProperty = await this.repository.create(property);
 
-    return createProperty;
+    return { property: createProperty };
   }
 }

@@ -3,6 +3,6 @@ import { create } from "./create";
 import { search } from "./search";
 
 export const propertiesRoutes = async (app: FastifyInstance) => {
-  app.post("/properties", create);
-  app.get("/properties", search);
+  app.post("/maneger/properties", create);
+  app.get("/maneger/properties", search);
 };

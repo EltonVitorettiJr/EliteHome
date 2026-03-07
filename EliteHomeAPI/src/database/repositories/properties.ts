@@ -12,11 +12,24 @@ export class PropertiesRepository implements PropertiesRepositoryProps {
     const [createProperty] = await knex<PropertySchema>("properties")
       .insert({
         name: property.name,
+        address: property.address,
         total_value: property.totalValue,
         number_of_rooms: property.numberOfRooms,
+        rent_value: property.rentValue,
+        condo_value: property.condoValue,
+        tax_value: property.taxValue,
+        number_of_bathrooms: property.numberOfBathrooms,
+        garage_slots: property.garageSlots,
+        are_pets_allowed: property.arePetsAllowed,
+        is_next_to_subway: property.isNextToSubway,
+        is_active: property.isActive,
+        is_sale: property.isSale,
+        is_rent: property.isRent,
+        is_furnished: property.isFurnished,
         size: property.size,
-        city: property.city,
-        state: property.state,
+        latitude: property.latitude,
+        longitude: property.longitude,
+        description: property.description,
       })
       .returning("*");
 

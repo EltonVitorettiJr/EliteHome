@@ -2,15 +2,25 @@ import type { PropertiesRepositoryProps } from "../database/repositories/propert
 import { Property } from "../entities/property";
 
 export interface CreatePropertyUseCaseRequest {
-  id?: string;
   name: string;
+  address: string;
   totalValue: number;
   numberOfRooms: number;
-  city: string;
-  state: string;
-  size: string;
-  createdAt?: string;
-  updatedAt?: string;
+  rentValue: number;
+  condoValue: number;
+  taxValue: number;
+  numberOfBathrooms: number;
+  garageSlots: number;
+  arePetsAllowed: boolean;
+  isNextToSubway: boolean;
+  isActive: boolean;
+  isSale: boolean;
+  isRent: boolean;
+  isFurnished: boolean;
+  size: number;
+  latitude: number;
+  longitude: number;
+  description?: string | undefined;
 }
 
 type CreatePropertyUseCaseReply = {
@@ -20,22 +30,10 @@ type CreatePropertyUseCaseReply = {
 export class CreatePropertyUseCase {
   constructor(private repository: PropertiesRepositoryProps) {}
 
-  async execute({
-    name,
-    city,
-    numberOfRooms,
-    size,
-    state,
-    totalValue,
-  }: CreatePropertyUseCaseRequest): Promise<CreatePropertyUseCaseReply> {
-    const property = new Property({
-      name,
-      city,
-      numberOfRooms,
-      size,
-      state,
-      totalValue,
-    });
+  async execute(
+    data: CreatePropertyUseCaseRequest,
+  ): Promise<CreatePropertyUseCaseReply> {
+    const property = new Property(data);
 
     const createProperty = await this.repository.create(property);
 

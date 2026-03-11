@@ -1,7 +1,7 @@
 import { Property } from "../../entities/property";
 
 interface PropertySchemaProps {
-  id?: string | undefined;
+  id?: string;
   name: string;
   address: string;
   total_value: number;
@@ -20,13 +20,13 @@ interface PropertySchemaProps {
   size: number;
   latitude: number;
   longitude: number;
-  description?: string | undefined;
-  created_at?: string | undefined;
-  updated_at?: string | undefined;
+  description?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export class PropertySchema {
-  public id?: string | undefined;
+  public id?: string;
   public name: string;
   public address: string;
   public total_value: number;
@@ -45,9 +45,9 @@ export class PropertySchema {
   public size: number;
   public latitude: number;
   public longitude: number;
-  public description?: string | undefined;
-  public created_at?: string | undefined;
-  public updated_at?: string | undefined;
+  public description?: string;
+  public created_at?: string;
+  public updated_at?: string;
 
   constructor({
     id,

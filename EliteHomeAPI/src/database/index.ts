@@ -1,10 +1,9 @@
 import knexConfig from "knex";
-
-const { CONNECTION_POSTGRES_DB: postgresConnection } = process.env;
+import { envs } from "../config/envs";
 
 export const knex = knexConfig({
   client: "pg",
-  connection: postgresConnection as string,
+  connection: envs.CONNECTION_POSTGRES_DB,
   pool: {
     min: 2,
     max: 10,

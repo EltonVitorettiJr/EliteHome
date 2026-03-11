@@ -1,4 +1,4 @@
-import type { PropertiesRepositoryProps } from "../database/repositories/properties";
+import type { PropertiesRepository } from "../database/repositories/properties";
 import { Property } from "../entities/property";
 
 export interface CreatePropertyUseCaseRequest {
@@ -20,7 +20,7 @@ export interface CreatePropertyUseCaseRequest {
   size: number;
   latitude: number;
   longitude: number;
-  description?: string | undefined;
+  description?: string;
 }
 
 type CreatePropertyUseCaseReply = {
@@ -28,7 +28,7 @@ type CreatePropertyUseCaseReply = {
 };
 
 export class CreatePropertyUseCase {
-  constructor(private repository: PropertiesRepositoryProps) {}
+  constructor(private repository: PropertiesRepository) {}
 
   async execute(
     data: CreatePropertyUseCaseRequest,

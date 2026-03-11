@@ -1,4 +1,4 @@
-import type { PropertiesRepositoryProps } from "../database/repositories/properties";
+import type { PropertiesRepository } from "../database/repositories/properties";
 import type { Property } from "../entities/property";
 
 export interface SearchPropertiesUseCaseReply {
@@ -6,7 +6,7 @@ export interface SearchPropertiesUseCaseReply {
 }
 
 export class SearchPropertiesUseCase {
-  constructor(private repository: PropertiesRepositoryProps) {}
+  constructor(private repository: PropertiesRepository) {}
 
   async execute(): Promise<SearchPropertiesUseCaseReply> {
     const properties = await this.repository.find();

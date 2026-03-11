@@ -1,12 +1,11 @@
+import { envs } from "../config/envs";
 import { app } from "./app";
-
-const port = 3000;
 
 app
   .listen({
     host: "0.0.0.0",
-    port: port,
+    port: envs.APP_PORT,
   })
   .then(() => {
-    console.log(`🚀Server is running at port ${port}!`);
+    console.log(`🚀Server is running at port ${envs.APP_PORT}!`);
   });

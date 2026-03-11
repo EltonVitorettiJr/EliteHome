@@ -1,5 +1,5 @@
 interface PropertyProps {
-  id?: string | undefined;
+  id?: string;
   name: string;
   address: string;
   totalValue: number;
@@ -18,13 +18,13 @@ interface PropertyProps {
   size: number;
   latitude: number;
   longitude: number;
-  description?: string | undefined;
-  createdAt?: Date | undefined;
-  updatedAt?: Date | undefined;
+  description?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export class Property {
-  public id?: string | undefined;
+  public id?: string;
   public name: string;
   public address: string;
   public totalValue: number;
@@ -43,9 +43,9 @@ export class Property {
   public size: number;
   public latitude: number;
   public longitude: number;
-  public description?: string | undefined;
-  public createdAt?: Date | undefined;
-  public updatedAt?: Date | undefined;
+  public description?: string;
+  public createdAt?: Date;
+  public updatedAt?: Date;
 
   constructor({
     id,

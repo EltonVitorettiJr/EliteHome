@@ -1,13 +1,11 @@
-// biome-ignore assist/source/organizeImports: <Falso positivo do Biome na organização dos imports>
-import "dotenv/config";
+// biome-ignore assist/source/organizeImports: <Falso positivo na organização dos imports no biome>
 import type { Knex } from "knex";
 import path from "node:path";
-
-const { CONNECTION_POSTGRES_DB: postgresConnection } = process.env;
+import { envs } from "./src/config/envs";
 
 const config: Knex.Config = {
   client: "postgresql",
-  connection: postgresConnection as string,
+  connection: envs.CONNECTION_POSTGRES_DB,
   pool: {
     min: 2,
     max: 10,

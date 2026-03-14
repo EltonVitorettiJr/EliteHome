@@ -29,6 +29,7 @@ export const create = async (request: FastifyRequest, reply: FastifyReply) => {
   const data = schema.parse(request.body);
 
   const repository = new PropertiesRepository();
+
   const useCase = new CreatePropertyUseCase(repository);
 
   const response = await useCase.execute(data);

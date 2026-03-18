@@ -1,3 +1,5 @@
+import type { PropertyType } from "../enums/property-type";
+
 interface PropertyProps {
   id?: string;
   name: string;
@@ -18,6 +20,7 @@ interface PropertyProps {
   size: number;
   latitude: number;
   longitude: number;
+  propertyType?: PropertyType;
   description?: string;
   createdAt?: Date;
   updatedAt?: Date;
@@ -43,6 +46,7 @@ export class Property {
   public size: number;
   public latitude: number;
   public longitude: number;
+  public propertyType?: PropertyType;
   public description?: string;
   public createdAt?: Date;
   public updatedAt?: Date;
@@ -67,6 +71,7 @@ export class Property {
     size,
     latitude,
     longitude,
+    propertyType,
     description,
     createdAt,
     updatedAt,
@@ -90,6 +95,7 @@ export class Property {
     this.size = size;
     this.latitude = latitude;
     this.longitude = longitude;
+    this.propertyType = propertyType
     this.description = description;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;

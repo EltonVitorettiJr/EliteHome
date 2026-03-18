@@ -1,4 +1,5 @@
 import { Property } from "../../entities/property";
+import type { PropertyType } from "../../enums/property-type";
 
 interface PropertySchemaProps {
   id?: string;
@@ -20,6 +21,7 @@ interface PropertySchemaProps {
   size: number;
   latitude: number;
   longitude: number;
+  property_type?: PropertyType;
   description?: string;
   created_at?: string;
   updated_at?: string;
@@ -45,6 +47,7 @@ export class PropertySchema {
   public size: number;
   public latitude: number;
   public longitude: number;
+  public property_type?: PropertyType;
   public description?: string;
   public created_at?: string;
   public updated_at?: string;
@@ -69,6 +72,7 @@ export class PropertySchema {
     size,
     latitude,
     longitude,
+    property_type,
     description,
     created_at,
     updated_at,
@@ -92,6 +96,7 @@ export class PropertySchema {
     this.size = size;
     this.latitude = latitude;
     this.longitude = longitude;
+    this.property_type = property_type;
     this.description = description;
     this.created_at = created_at;
     this.updated_at = updated_at;
@@ -118,6 +123,7 @@ export class PropertySchema {
       size,
       latitude,
       longitude,
+      property_type,
       description,
       created_at,
       updated_at,
@@ -144,6 +150,7 @@ export class PropertySchema {
       latitude,
       longitude,
       description,
+      propertyType: property_type,
       createdAt: created_at ? new Date(created_at) : undefined,
       updatedAt: updated_at ? new Date(updated_at) : undefined,
     });

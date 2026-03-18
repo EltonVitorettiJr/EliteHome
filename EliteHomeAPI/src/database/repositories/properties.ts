@@ -25,6 +25,7 @@ export class PropertiesRepository {
         latitude: property.latitude,
         longitude: property.longitude,
         description: property.description,
+        ...(property.propertyType && { property_type: property.propertyType }),
       })
       .returning("*");
 
@@ -88,6 +89,7 @@ export class PropertiesRepository {
         ...(property.latitude && { latitude: property.latitude }),
         ...(property.longitude && { longitude: property.longitude }),
         ...(property.description && { description: property.description }),
+        ...(property.propertyType && { property_type: property.propertyType }),
       })
       .where({ id })
       .returning("*");
@@ -97,5 +99,15 @@ export class PropertiesRepository {
     ).toEntity();
 
     return propertyEntity;
+  }
+
+  async delete(id: string): Promise<void> {
+    await knex("properties")
+    .where({
+      id
+    })
+    .delete()
+
+    return
   }
 }

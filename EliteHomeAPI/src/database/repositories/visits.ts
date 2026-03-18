@@ -11,7 +11,7 @@ export class VisitsRepository {
         email: visit.email,
         phone: visit.phone,
         property_id: visit.propertyId,
-        type: visit.type,
+        visit_status: visit.visitStatus,
       })
       .returning("*");
 
@@ -20,12 +20,16 @@ export class VisitsRepository {
     return visitEntity;
   }
 
-  async findById(id: string): Promise<Visit> {
-    const visit = await knex<VisitSchema>("visits").where({ id });
+  async findById(id: string): Promise<Visit[]> {
+    const visits = await knex<VisitSchema>("visits").where({
+      property_id: id
+    });
+    
+    const visitsEntities = visits.map((property) =>
+      new VisitSchema(property).toEntity(),
+    );
 
-    const visitEntity = visit.map((v) => new VisitSchema(v).toEntity());
-
-    return visitEntity.at(0) as Visit;
+    return visitsEntities;
   }
 
   async update(
@@ -39,7 +43,7 @@ export class VisitsRepository {
         ...(visit.email && { email: visit.email }),
         ...(visit.phone && { phone: visit.phone }),
         ...(visit.propertyId && { property_id: visit.propertyId }),
-        ...(visit.type && { visit_status: visit.type }),
+        ...(visit.visitStatus && { visit_status: visit.visitStatus }),
       })
       .where({ id })
       .returning("*");

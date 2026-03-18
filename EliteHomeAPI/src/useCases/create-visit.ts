@@ -7,7 +7,7 @@ export interface CreateVisitUseCaseRequest {
   phone: string;
   email: string;
   date: Date;
-  type: VisitStatus;
+  visitStatus?: VisitStatus;
   propertyId: string;
 }
 

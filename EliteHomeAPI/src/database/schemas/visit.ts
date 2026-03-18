@@ -7,7 +7,7 @@ interface VisitSchemaProps {
   phone: string;
   email: string;
   date: string;
-  type: VisitStatus;
+  visit_status?: VisitStatus;
   created_at?: string;
   updated_at?: string;
   property_id: string;
@@ -19,7 +19,7 @@ export class VisitSchema {
   public phone: string;
   public email: string;
   public date: string;
-  public type: VisitStatus;
+  public visit_status?: VisitStatus;
   public created_at?: string;
   public updated_at?: string;
   public property_id: string;
@@ -33,7 +33,7 @@ export class VisitSchema {
     property_id,
     created_at,
     updated_at,
-    type,
+    visit_status,
   }: VisitSchemaProps) {
     this.id = id;
     this.name = name;
@@ -43,7 +43,7 @@ export class VisitSchema {
     this.created_at = created_at;
     this.updated_at = updated_at;
     this.property_id = property_id;
-    this.type = type;
+    this.visit_status = visit_status;
   }
 
   public toEntity() {
@@ -53,7 +53,7 @@ export class VisitSchema {
       date,
       email,
       phone,
-      type,
+      visit_status,
       property_id,
       created_at,
       updated_at,
@@ -65,7 +65,7 @@ export class VisitSchema {
       date: new Date(date),
       email,
       phone,
-      type,
+      visitStatus: visit_status,
       propertyId: property_id,
       createdAt: created_at ? new Date(created_at) : undefined,
       updatedAt: updated_at ? new Date(updated_at) : undefined,

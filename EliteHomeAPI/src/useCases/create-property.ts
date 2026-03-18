@@ -1,5 +1,6 @@
 import type { PropertiesRepository } from "../database/repositories/properties";
 import { Property } from "../entities/property";
+import type { PropertyType } from "../enums/property-type";
 
 export interface CreatePropertyUseCaseRequest {
   name: string;
@@ -21,6 +22,7 @@ export interface CreatePropertyUseCaseRequest {
   latitude: number;
   longitude: number;
   description?: string;
+  propertyType?: PropertyType;
 }
 
 type CreatePropertyUseCaseReply = {

@@ -16,7 +16,7 @@ export const createVisit = async (
     phone: z.string().length(14),
     email: z.email(),
     date: z.coerce.date(),
-    type: z.enum(["INTEREST", "CONFIRMED", "COMPLETED", "CANCELLED"]),
+    visitStatus: z.enum(["INTEREST", "CONFIRMED", "COMPLETED", "CANCELLED"]).optional(),
   });
 
   const data = schema.parse(request.body);

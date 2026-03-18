@@ -24,6 +24,7 @@ export const create = async (request: FastifyRequest, reply: FastifyReply) => {
     latitude: z.number(),
     longitude: z.number(),
     description: z.string().max(1000).optional(),
+    propertyType: z.enum(["APARTMENT", "HOUSE", "TOWNHOUSE", "STUDIO"]).optional()
   });
 
   const data = schema.parse(request.body);

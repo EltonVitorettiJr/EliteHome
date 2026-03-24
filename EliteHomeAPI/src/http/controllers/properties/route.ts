@@ -3,7 +3,9 @@ import { create } from "./create";
 import { createVisit } from "./create-visit";
 import { deleteProperty } from "./delete-property";
 import { findById } from "./find-by-id";
+import { findOneVisit } from "./find-one-visit";
 import { search } from "./search";
+import { searchVisits } from "./search-visits";
 import { update } from "./update";
 import { updateVisit } from "./update-visit";
 
@@ -16,4 +18,6 @@ export const propertiesRoutes = async (app: FastifyInstance) => {
 
   app.post("/manager/properties/:id/visit", createVisit);
   app.patch("/manager/properties/:id/visit", updateVisit);
+  app.get("/manager/properties/:id/search-visits", searchVisits);
+  app.get("/manager/properties/:id/visit", findOneVisit);
 };

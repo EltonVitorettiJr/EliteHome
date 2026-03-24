@@ -20,16 +20,24 @@ export class VisitsRepository {
     return visitEntity;
   }
 
-  async findById(id: string): Promise<Visit[]> {
+  async findById(propertyId: string): Promise<Visit[]> {
     const visits = await knex<VisitSchema>("visits").where({
-      property_id: id
+      property_id: propertyId,
     });
-    
+
     const visitsEntities = visits.map((property) =>
       new VisitSchema(property).toEntity(),
     );
 
     return visitsEntities;
+  }
+
+  async findOneVisit(id: string): Promise<Visit> {
+    const visit = await knex<VisitSchema>("visits").where({ id });
+
+    const visitEntity = visit.map((v) => new VisitSchema(v).toEntity());
+
+    return visitEntity.at(0) as Visit;
   }
 
   async update(
@@ -51,5 +59,15 @@ export class VisitsRepository {
     const visitEntity = new VisitSchema(updatedVisit as VisitSchema).toEntity();
 
     return visitEntity;
+  }
+
+  async delete(id: string) {
+    await knex<VisitSchema>("visits")
+      .where({
+        id,
+      })
+      .delete();
+
+    return;
   }
 }

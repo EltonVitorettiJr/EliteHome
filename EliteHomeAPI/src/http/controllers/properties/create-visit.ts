@@ -16,7 +16,9 @@ export const createVisit = async (
     phone: z.string().length(14),
     email: z.email(),
     date: z.coerce.date(),
-    visitStatus: z.enum(["INTEREST", "CONFIRMED", "COMPLETED", "CANCELLED"]).optional(),
+    visitStatus: z
+      .enum(["INTEREST", "CONFIRMED", "COMPLETED", "CANCELLED"])
+      .optional(),
   });
 
   const data = schema.parse(request.body);
@@ -29,7 +31,10 @@ export const createVisit = async (
 
   const useCase = new CreateVisitUseCase(repository);
 
-  const response = await useCase.execute({ ...data, propertyId: params.id });
+  const response = await useCase.execute({
+    ...data,
+    propertyId: params.id,
+  });
 
   reply.status(201).send(response);
 };

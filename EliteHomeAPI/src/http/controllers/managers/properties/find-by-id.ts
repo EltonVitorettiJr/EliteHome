@@ -1,7 +1,7 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
-import { PropertiesRepository } from "../../../database/repositories/properties";
-import { FindPropertyByIdUseCase } from "../../../useCases/find-property";
+import { PropertiesRepository } from "../../../../database/repositories/properties";
+import { FindPropertyByIdUseCase } from "../../../../useCases/find-property";
 
 export const findById = async (
   request: FastifyRequest,

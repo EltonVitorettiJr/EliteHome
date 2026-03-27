@@ -1,15 +1,15 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
-import { VisitsRepository } from "../../../database/repositories/visits";
-import { UpdateVisitUseCase } from "../../../useCases/update-visit";
+import { VisitsRepository } from "../../../../database/repositories/visits";
+import { UpdateVisitUseCase } from "../../../../useCases/update-visit";
 
 export const updateVisit = async (
   request: FastifyRequest,
   reply: FastifyReply,
 ) => {
   const paramsSchema = z.object({
-    id: z.uuid()
-  })
+    id: z.uuid(),
+  });
 
   const schema = z.object({
     name: z.string().min(1).max(255).optional(),
@@ -21,15 +21,15 @@ export const updateVisit = async (
       .optional(),
   });
 
-  const params = paramsSchema.parse(request.params)
+  const params = paramsSchema.parse(request.params);
 
-  const data = schema.parse(request.body)
+  const data = schema.parse(request.body);
 
-  const repository = new VisitsRepository()
+  const repository = new VisitsRepository();
 
-  const useCase = new UpdateVisitUseCase(repository)
-  
-  const response = await useCase.execute(params.id, data)
+  const useCase = new UpdateVisitUseCase(repository);
 
-  reply.status(200).send(response)
+  const response = await useCase.execute(params.id, data);
+
+  reply.status(200).send(response);
 };

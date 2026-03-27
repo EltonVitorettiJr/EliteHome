@@ -1,7 +1,7 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
-import { VisitsRepository } from "../../../database/repositories/visits";
-import { DeleteVisitUseCase } from "../../../useCases/delete-visit";
+import { VisitsRepository } from "../../../../database/repositories/visits";
+import { DeleteVisitUseCase } from "../../../../useCases/delete-visit";
 
 export const deleteVisit = async (
   request: FastifyRequest,

@@ -1,7 +1,7 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
-import { PropertiesRepository } from "../../../database/repositories/properties";
-import { CreatePropertyUseCase } from "../../../useCases/create-property";
+import { PropertiesRepository } from "../../../../database/repositories/properties";
+import { CreatePropertyUseCase } from "../../../../useCases/create-property";
 
 export const create = async (request: FastifyRequest, reply: FastifyReply) => {
   const schema = z.object({
@@ -24,7 +24,9 @@ export const create = async (request: FastifyRequest, reply: FastifyReply) => {
     latitude: z.number(),
     longitude: z.number(),
     description: z.string().max(1000).optional(),
-    propertyType: z.enum(["APARTMENT", "HOUSE", "TOWNHOUSE", "STUDIO"]).optional()
+    propertyType: z
+      .enum(["APARTMENT", "HOUSE", "TOWNHOUSE", "STUDIO"])
+      .optional(),
   });
 
   const data = schema.parse(request.body);

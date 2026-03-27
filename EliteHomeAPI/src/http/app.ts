@@ -3,12 +3,14 @@ import fastify from "fastify";
 import { ZodError } from "zod";
 import { AppError } from "../errors/app-error";
 import { baseRoutes } from "./controllers/base/route";
-import { propertiesRoutes } from "./controllers/properties/route";
+import { managersPropertiesRoutes } from "./controllers/managers/properties/route";
+import { publicPropertiesRoutes } from "./controllers/public/properties/routes";
 
 export const app = fastify();
 
 app.register(baseRoutes);
-app.register(propertiesRoutes);
+app.register(managersPropertiesRoutes);
+app.register(publicPropertiesRoutes);
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {

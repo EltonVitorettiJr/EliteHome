@@ -46,6 +46,18 @@ export class PropertiesRepository {
     return propertiesEntities;
   }
 
+  async findActiveProperties(): Promise<Property[]> {
+    const properties = await knex<PropertySchema>("properties").where({
+      is_active: true,
+    });
+
+    const propertiesEntities = properties.map((p) =>
+      new PropertySchema(p).toEntity(),
+    );
+
+    return propertiesEntities;
+  }
+
   async findById(id: string): Promise<Property> {
     const property = await knex<PropertySchema>("properties").where({ id });
 
@@ -75,16 +87,20 @@ export class PropertiesRepository {
           number_of_bathrooms: property.numberOfBathrooms,
         }),
         ...(property.garageSlots && { garage_slots: property.garageSlots }),
-        ...(property.arePetsAllowed && {
+        ...(property.arePetsAllowed !== undefined && {
           are_pets_allowed: property.arePetsAllowed,
         }),
-        ...(property.isNextToSubway && {
+        ...(property.isNextToSubway !== undefined && {
           is_next_to_subway: property.isNextToSubway,
         }),
-        ...(property.isActive && { is_active: property.isActive }),
-        ...(property.isSale && { is_sale: property.isSale }),
-        ...(property.isRent && { is_rent: property.isRent }),
-        ...(property.isFurnished && { is_furnished: property.isFurnished }),
+        ...(property.isActive !== undefined && {
+          is_active: property.isActive,
+        }),
+        ...(property.isSale !== undefined && { is_sale: property.isSale }),
+        ...(property.isRent !== undefined && { is_rent: property.isRent }),
+        ...(property.isFurnished !== undefined && {
+          is_furnished: property.isFurnished,
+        }),
         ...(property.size && { size: property.size }),
         ...(property.latitude && { latitude: property.latitude }),
         ...(property.longitude && { longitude: property.longitude }),
@@ -103,11 +119,11 @@ export class PropertiesRepository {
 
   async delete(id: string): Promise<void> {
     await knex("properties")
-    .where({
-      id
-    })
-    .delete()
+      .where({
+        id,
+      })
+      .delete();
 
-    return
+    return;
   }
 }

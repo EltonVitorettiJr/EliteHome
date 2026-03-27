@@ -1,7 +1,7 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
-import { VisitsRepository } from "../../../database/repositories/visits";
-import { FindOneVisitUseCase } from "../../../useCases/find-one-visit";
+import { VisitsRepository } from "../../../../database/repositories/visits";
+import { FindOneVisitUseCase } from "../../../../useCases/find-one-visit";
 
 export const findOneVisit = async (
   request: FastifyRequest,

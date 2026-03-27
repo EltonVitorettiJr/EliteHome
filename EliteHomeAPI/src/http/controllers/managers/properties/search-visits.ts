@@ -1,8 +1,8 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
-import { PropertiesRepository } from "../../../database/repositories/properties";
-import { VisitsRepository } from "../../../database/repositories/visits";
-import { SearchVisitsUseCase } from "../../../useCases/search-visits";
+import { PropertiesRepository } from "../../../../database/repositories/properties";
+import { VisitsRepository } from "../../../../database/repositories/visits";
+import { SearchVisitsUseCase } from "../../../../useCases/search-visits";
 
 export const searchVisits = async (
   request: FastifyRequest,

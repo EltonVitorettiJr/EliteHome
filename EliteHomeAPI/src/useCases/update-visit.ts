@@ -23,7 +23,7 @@ export class UpdateVisitUseCase {
     id: string,
     data: UpdateVisitUseCaseRequest,
   ): Promise<UpdateVisitUseCaseReply> {
-    const visitExists = await this.repository.findById(id);
+    const visitExists = await this.repository.findByPropertyId(id);
 
     if (!visitExists) {
       throw new NotFoundError("Visit not found.");
@@ -31,6 +31,6 @@ export class UpdateVisitUseCase {
 
     const updateVisit = await this.repository.update(id, data);
 
-    return {visit: updateVisit};
+    return { visit: updateVisit };
   }
 }

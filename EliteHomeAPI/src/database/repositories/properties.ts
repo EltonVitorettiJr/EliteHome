@@ -58,14 +58,18 @@ export class PropertiesRepository {
     return propertiesEntities;
   }
 
-  async findById(id: string): Promise<Property> {
+  async findById(id: string): Promise<Property | undefined> {
     const property = await knex<PropertySchema>("properties").where({ id });
+
+    if (property.length === 0) {
+      return undefined;
+    }
 
     const propertyEntity = property.map((p) =>
       new PropertySchema(p).toEntity(),
     );
 
-    return propertyEntity.at(0) as Property;
+    return propertyEntity.at(0);
   }
 
   async update(

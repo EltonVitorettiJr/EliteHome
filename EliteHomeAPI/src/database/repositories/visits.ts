@@ -1,4 +1,5 @@
 import type { Visit } from "../../entities/visit";
+import { visitStatus } from "../../enums/visit-status";
 import { knex } from "../index";
 import { VisitSchema } from "../schemas/visit";
 
@@ -20,7 +21,7 @@ export class VisitsRepository {
     return visitEntity;
   }
 
-  async findById(propertyId: string): Promise<Visit[]> {
+  async findByPropertyId(propertyId: string): Promise<Visit[]> {
     const visits = await knex<VisitSchema>("visits").where({
       property_id: propertyId,
     });
@@ -32,12 +33,36 @@ export class VisitsRepository {
     return visitsEntities;
   }
 
-  async findOneVisit(id: string): Promise<Visit> {
-    const visit = await knex<VisitSchema>("visits").where({ id });
+  async findVisitByUserEmail(
+    email: string,
+    propertyId: string,
+  ): Promise<Visit | undefined> {
+    const visit = await knex<VisitSchema>("visits")
+      .where({
+        email,
+        property_id: propertyId,
+      })
+      .whereIn("visit_status", [visitStatus.INTEREST, visitStatus.CONFIRMED]);
+
+    if (visit.length === 0) {
+      return undefined;
+    }
 
     const visitEntity = visit.map((v) => new VisitSchema(v).toEntity());
 
-    return visitEntity.at(0) as Visit;
+    return visitEntity.at(0);
+  }
+
+  async findOneVisit(id: string): Promise<Visit | undefined> {
+    const visit = await knex<VisitSchema>("visits").where({ id });
+
+    if (visit.length === 0) {
+      return undefined;
+    }
+
+    const visitEntity = visit.map((v) => new VisitSchema(v).toEntity());
+
+    return visitEntity.at(0);
   }
 
   async update(
@@ -61,7 +86,7 @@ export class VisitsRepository {
     return visitEntity;
   }
 
-  async delete(id: string) {
+  async delete(id: string): Promise<void> {
     await knex<VisitSchema>("visits")
       .where({
         id,

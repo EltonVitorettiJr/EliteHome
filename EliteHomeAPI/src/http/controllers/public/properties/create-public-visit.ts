@@ -1,5 +1,6 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
+import { PropertiesRepository } from "../../../../database/repositories/properties";
 import { VisitsRepository } from "../../../../database/repositories/visits";
 import { CreatePublicVisitUseCase } from "../../../../useCases/create-public-visit";
 
@@ -22,11 +23,16 @@ export const createPublicVisit = async (
 
   const data = schema.parse(request.body);
 
-  const repository = new VisitsRepository();
+  const visitsRepository = new VisitsRepository();
 
-  const useCase = new CreatePublicVisitUseCase(repository);
+  const propertiesRepository = new PropertiesRepository();
+
+  const useCase = new CreatePublicVisitUseCase(
+    visitsRepository,
+    propertiesRepository,
+  );
 
   const response = await useCase.execute({ ...data, propertyId: params.id });
 
-  reply.status(200).send(response);
+  reply.status(201).send(response);
 };

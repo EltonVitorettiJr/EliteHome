@@ -1,4 +1,5 @@
 import type { FastifyInstance } from "fastify";
+import { verifyJWT } from "../../../middleware/verify-jwt";
 import { create } from "./create";
 import { createVisit } from "./create-visit";
 import { deleteProperty } from "./delete-property";
@@ -11,6 +12,8 @@ import { update } from "./update";
 import { updateVisit } from "./update-visit";
 
 export const managersPropertiesRoutes = async (app: FastifyInstance) => {
+  app.addHook("onRequest", verifyJWT);
+
   //Properties routes
   app.post("/manager/properties", create);
   app.get("/manager/properties", search);

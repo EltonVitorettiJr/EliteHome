@@ -8,4 +8,5 @@ export const envs = {
     .asString(),
   NODE_ENV: env.get("NODE_ENV").default("development").asString(),
   APP_PORT: env.get("APP_PORT").default(4000).asIntPositive(),
+  JWT_SECRET: env.get("JWT_SECRET").required().asString(),
 };

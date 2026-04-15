@@ -20,7 +20,7 @@ export class SearchVisitsUseCase {
       throw new NotFoundError("Property not found.");
     }
 
-    const visits = await this.visitRepository.findById(propertyId);
+    const visits = await this.visitRepository.findByPropertyId(propertyId);
 
     return { visits };
   }

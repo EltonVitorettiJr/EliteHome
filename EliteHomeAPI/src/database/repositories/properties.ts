@@ -1,4 +1,5 @@
 import type { Property } from "../../entities/property";
+import type { SearchPropertiesFilter } from "../../useCases/search-properties";
 import { knex } from "../index";
 import { PropertySchema } from "../schemas/property";
 
@@ -36,8 +37,43 @@ export class PropertiesRepository {
     return propertyEntity;
   }
 
-  async find(): Promise<Property[]> {
-    const properties = await knex<PropertySchema>("properties");
+  async find(filters: SearchPropertiesFilter): Promise<Property[]> {
+    const {
+      arePetsAllowed,
+      isFurnished,
+      isNextToSubway,
+      isRent,
+      isSale,
+      maxRentValue,
+      maxTotalValue,
+      minBathrooms,
+      minRooms,
+      propertyType,
+    } = filters;
+
+    const query = knex<PropertySchema>("properties");
+
+    query.modify((queryBuilder) => {
+      //filtros boolean
+      if (isRent !== undefined) queryBuilder.where("is_rent", isRent);
+      if (isSale) queryBuilder.where("is_sale", isSale);
+      if (arePetsAllowed)
+        queryBuilder.where("are_pets_allowed", arePetsAllowed);
+      if (isNextToSubway)
+        queryBuilder.where("is_next_to_subway", isNextToSubway);
+      if (isFurnished) queryBuilder.where("is_furnished", isFurnished);
+
+      //filtros number
+      if (maxRentValue) queryBuilder.where("rent_value", "<=", maxRentValue);
+      if (maxTotalValue) queryBuilder.where("total_value", "<=", maxTotalValue);
+      if (minBathrooms)
+        queryBuilder.where("number_of_bathrooms", ">=", minBathrooms);
+      if (minRooms) queryBuilder.where("number_of_rooms", ">=", minRooms);
+
+      if (propertyType) queryBuilder.where("property_type", "=", propertyType);
+    });
+
+    const properties = await query;
 
     const propertiesEntities = properties.map((property) =>
       new PropertySchema(property).toEntity(),
@@ -46,10 +82,48 @@ export class PropertiesRepository {
     return propertiesEntities;
   }
 
-  async findActiveProperties(): Promise<Property[]> {
-    const properties = await knex<PropertySchema>("properties").where({
+  async findActiveProperties(
+    filters: SearchPropertiesFilter = {},
+  ): Promise<Property[]> {
+    const {
+      arePetsAllowed,
+      isFurnished,
+      isNextToSubway,
+      isRent,
+      isSale,
+      maxRentValue,
+      maxTotalValue,
+      minBathrooms,
+      minRooms,
+      propertyType,
+    } = filters;
+
+    const query = knex<PropertySchema>("properties").where({
       is_active: true,
     });
+
+    query.modify((queryBuilder) => {
+      //filtros boolean
+      if (isRent !== undefined) queryBuilder.where("is_rent", isRent);
+      if (isSale !== undefined) queryBuilder.where("is_sale", isSale);
+      if (arePetsAllowed !== undefined)
+        queryBuilder.where("are_pets_allowed", arePetsAllowed);
+      if (isNextToSubway !== undefined)
+        queryBuilder.where("is_next_to_subway", isNextToSubway);
+      if (isFurnished !== undefined)
+        queryBuilder.where("is_furnished", isFurnished);
+
+      //filtros number
+      if (maxRentValue) queryBuilder.where("rent_value", "<=", maxRentValue);
+      if (maxTotalValue) queryBuilder.where("total_value", "<=", maxTotalValue);
+      if (minBathrooms)
+        queryBuilder.where("number_of_bathrooms", ">=", minBathrooms);
+      if (minRooms) queryBuilder.where("number_of_rooms", ">=", minRooms);
+
+      if (propertyType) queryBuilder.where("property_type", "=", propertyType);
+    });
+
+    const properties = await query;
 
     const propertiesEntities = properties.map((p) =>
       new PropertySchema(p).toEntity(),

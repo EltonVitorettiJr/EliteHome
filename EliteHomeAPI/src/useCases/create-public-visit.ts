@@ -3,6 +3,7 @@ import type { VisitsRepository } from "../database/repositories/visits";
 import type { Visit } from "../entities/visit";
 import { AlreadyExistsError } from "../errors/already-exists-error";
 import { NotFoundError } from "../errors/not-found-error";
+import type { MailProvider } from "../providers/mail-provider";
 
 export interface CreatePublicVisitUseCaseRequest {
   name: string;
@@ -20,6 +21,7 @@ export class CreatePublicVisitUseCase {
   constructor(
     private visitsRepository: VisitsRepository,
     private propertiesRepository: PropertiesRepository,
+    private mailProvider: MailProvider,
   ) {}
 
   async execute(
@@ -43,6 +45,29 @@ export class CreatePublicVisitUseCase {
     }
 
     const visit = await this.visitsRepository.create(data);
+
+    await this.mailProvider.sendMail({
+      to: data.email,
+      subject: "Recebemos seu interesse na visita!",
+      body: `
+        <h1>Olá, ${data.name}!</h1>
+        <p>Recebemos o seu interesse em visitar o imóvel.</p>
+        <p>Nossos corretores entrarão em contato em breve para confirmar a data.</p>
+      `,
+    });
+
+    await this.mailProvider.sendMail({
+      to: "gerencia@elitehome.com.br", // O e-mail oficial da imobiliária
+      subject: `🚨 Novo interesse de visita: ${propertyExists.name}`, // Fica legal puxar o nome do imóvel
+      body: `
+        <h1>Nova Visita Solicitada!</h1>
+        <p><strong>Cliente:</strong> ${data.name}</p>
+        <p><strong>E-mail:</strong> ${data.email}</p>
+        <p><strong>Imóvel:</strong> ${propertyExists.name}</p>
+        <br>
+        <p>Acesse o painel administrativo para aprovar ou cancelar esta visita.</p>
+      `,
+    });
 
     return { visit };
   }

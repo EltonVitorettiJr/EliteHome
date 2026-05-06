@@ -1,6 +1,7 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
 import { VisitsRepository } from "../../../../database/repositories/visits";
+import { EtherealMailProvider } from "../../../../providers/implementations/ethereal-mail-provider";
 import { UpdateVisitUseCase } from "../../../../useCases/update-visit";
 
 export const updateVisit = async (
@@ -25,9 +26,11 @@ export const updateVisit = async (
 
   const data = schema.parse(request.body);
 
+  const mailProvider = new EtherealMailProvider();
+
   const repository = new VisitsRepository();
 
-  const useCase = new UpdateVisitUseCase(repository);
+  const useCase = new UpdateVisitUseCase(repository, mailProvider);
 
   const response = await useCase.execute(params.id, data);
 

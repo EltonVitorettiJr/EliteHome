@@ -2,6 +2,7 @@ import type { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
 import { PropertiesRepository } from "../../../../database/repositories/properties";
 import { VisitsRepository } from "../../../../database/repositories/visits";
+import { EtherealMailProvider } from "../../../../providers/implementations/ethereal-mail-provider";
 import { CreatePublicVisitUseCase } from "../../../../useCases/create-public-visit";
 
 export const createPublicVisit = async (
@@ -23,6 +24,8 @@ export const createPublicVisit = async (
 
   const data = schema.parse(request.body);
 
+  const mailProvider = new EtherealMailProvider();
+
   const visitsRepository = new VisitsRepository();
 
   const propertiesRepository = new PropertiesRepository();
@@ -30,6 +33,7 @@ export const createPublicVisit = async (
   const useCase = new CreatePublicVisitUseCase(
     visitsRepository,
     propertiesRepository,
+    mailProvider,
   );
 
   const response = await useCase.execute({ ...data, propertyId: params.id });

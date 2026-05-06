@@ -21,6 +21,8 @@ export const search = async (request: FastifyRequest, reply: FastifyReply) => {
     propertyType: z
       .enum(["APARTMENT", "HOUSE", "TOWNHOUSE", "STUDIO"])
       .optional(),
+    page: z.coerce.number().min(1).default(1),
+    limit: z.coerce.number().min(1).max(50).default(10),
   });
 
   const filters = filtersSchema.parse(request.query);

@@ -49,7 +49,11 @@ export class PropertiesRepository {
       minBathrooms,
       minRooms,
       propertyType,
+      limit = 10,
+      page = 1,
     } = filters;
+
+    const offset = (page - 1) * limit;
 
     const query = knex<PropertySchema>("properties");
 
@@ -72,6 +76,8 @@ export class PropertiesRepository {
 
       if (propertyType) queryBuilder.where("property_type", "=", propertyType);
     });
+
+    query.limit(limit).offset(offset);
 
     const properties = await query;
 
@@ -96,7 +102,11 @@ export class PropertiesRepository {
       minBathrooms,
       minRooms,
       propertyType,
+      limit = 10,
+      page = 1,
     } = filters;
+
+    const offset = (page - 1) * limit;
 
     const query = knex<PropertySchema>("properties").where({
       is_active: true,
@@ -122,6 +132,8 @@ export class PropertiesRepository {
 
       if (propertyType) queryBuilder.where("property_type", "=", propertyType);
     });
+
+    query.limit(limit).offset(offset);
 
     const properties = await query;
 

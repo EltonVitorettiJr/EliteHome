@@ -17,6 +17,8 @@ export interface SearchPropertiesFilter {
   minRooms?: number;
   minBathrooms?: number;
   propertyType?: PropertyType;
+  page?: number;
+  limit?: number;
 }
 
 export class SearchPropertiesUseCase {

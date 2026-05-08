@@ -57,8 +57,8 @@ export class CreatePublicVisitUseCase {
     });
 
     await this.mailProvider.sendMail({
-      to: "gerencia@elitehome.com.br", // O e-mail oficial da imobiliária
-      subject: `🚨 Novo interesse de visita: ${propertyExists.name}`, // Fica legal puxar o nome do imóvel
+      to: "gerencia@elitehome.com.br",
+      subject: `🚨 Novo interesse de visita: ${propertyExists.name}`,
       body: `
         <h1>Nova Visita Solicitada!</h1>
         <p><strong>Cliente:</strong> ${data.name}</p>

@@ -1,6 +1,10 @@
+// biome-ignore assist/source/organizeImports: <Falso positivo do Biome>
 import fastifyJwt from "@fastify/jwt";
+import fastifyMultipart from "@fastify/multipart";
+import fastifyStatic from "@fastify/static";
 import "dotenv/config";
 import fastify from "fastify";
+import path from "node:path";
 import { ZodError } from "zod";
 import { envs } from "../config/envs";
 import { AppError } from "../errors/app-error";
@@ -11,6 +15,16 @@ import { userRoutes } from "./controllers/users/routes";
 
 export const app = fastify();
 
+app.register(fastifyStatic, {
+  root: path.resolve(__dirname, "../../uploads"),
+
+  prefix: "/uploads/",
+});
+app.register(fastifyMultipart, {
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB
+  },
+});
 app.register(baseRoutes);
 app.register(managersPropertiesRoutes);
 app.register(publicPropertiesRoutes);

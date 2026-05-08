@@ -25,8 +25,6 @@ export const createVisit = async (
 
   const params = paramsSchema.parse(request.params);
 
-  console.log(data, params);
-
   const repository = new VisitsRepository();
 
   const useCase = new CreateVisitUseCase(repository);

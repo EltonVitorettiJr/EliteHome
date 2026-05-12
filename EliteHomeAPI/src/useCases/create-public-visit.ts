@@ -40,7 +40,11 @@ export class CreatePublicVisitUseCase {
       data.propertyId,
     );
 
-    if (visitExists) {
+    if (
+      visitExists &&
+      visitExists?.visitStatus !== "CANCELLED" &&
+      visitExists?.visitStatus !== "COMPLETED"
+    ) {
       throw new AlreadyExistsError("This visit already exists!");
     }
 

@@ -1,6 +1,7 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
 import { PropertiesRepository } from "../../../../database/repositories/properties";
+import { NominatimProvider } from "../../../../providers/implementations/nominatim-provider";
 import { CreatePropertyUseCase } from "../../../../useCases/create-property";
 
 export const create = async (request: FastifyRequest, reply: FastifyReply) => {
@@ -20,9 +21,9 @@ export const create = async (request: FastifyRequest, reply: FastifyReply) => {
     isSale: z.boolean(),
     isRent: z.boolean(),
     isFurnished: z.boolean(),
+    latitude: z.number().optional(),
+    longitude: z.number().optional(),
     size: z.number(),
-    latitude: z.number(),
-    longitude: z.number(),
     description: z.string().max(1000).optional(),
     propertyType: z
       .enum(["APARTMENT", "HOUSE", "TOWNHOUSE", "STUDIO"])
@@ -31,9 +32,14 @@ export const create = async (request: FastifyRequest, reply: FastifyReply) => {
 
   const data = schema.parse(request.body);
 
-  const repository = new PropertiesRepository();
+  const propertiesRepository = new PropertiesRepository();
 
-  const useCase = new CreatePropertyUseCase(repository);
+  const nominatimProvider = new NominatimProvider();
+
+  const useCase = new CreatePropertyUseCase(
+    propertiesRepository,
+    nominatimProvider,
+  );
 
   const response = await useCase.execute(data);
 

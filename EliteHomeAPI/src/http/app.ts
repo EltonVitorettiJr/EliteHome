@@ -31,6 +31,9 @@ app.register(publicPropertiesRoutes);
 app.register(userRoutes);
 app.register(fastifyJwt, {
   secret: envs.JWT_SECRET,
+  sign: {
+    expiresIn: envs.EXPIRES_IN_JWT,
+  },
 });
 
 app.setErrorHandler((error, _, reply) => {

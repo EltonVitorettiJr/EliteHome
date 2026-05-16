@@ -1,7 +1,7 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
 import { PropertyImagesRepository } from "../../../../database/repositories/image";
-import { LocalStorageProvider } from "../../../../providers/implementations/local-storage-provider";
+import { S3StorageProvider } from "../../../../providers/implementations/s3-storage-provider";
 import { UploadPropertyImagesUseCase } from "../../../../useCases/upload-property-images";
 
 export const uploadPropertyImages = async (
@@ -32,7 +32,7 @@ export const uploadPropertyImages = async (
     return reply.status(400).send({ error: "No files uploaded." });
   }
 
-  const storageProvider = new LocalStorageProvider();
+  const storageProvider = new S3StorageProvider();
   const imagesRepository = new PropertyImagesRepository();
   const useCase = new UploadPropertyImagesUseCase(
     imagesRepository,

@@ -14,6 +14,9 @@ const config: Knex.Config = {
     tableName: "knex_migrations",
     directory: path.join(__dirname, "src", "database", "migration"),
   },
+  seeds: {
+    directory: "./src/database/seed",
+  },
 };
 
 export default config;

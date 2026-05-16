@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { NotFoundError } from "../../errors/not-found-error";
+import { AppError } from "../../errors/app-error";
 import type { StorageProvider } from "../storage-provider";
 
 export class LocalStorageProvider implements StorageProvider {
@@ -36,7 +36,7 @@ export class LocalStorageProvider implements StorageProvider {
 
       await fs.unlink(filePath);
     } catch (err) {
-      throw new NotFoundError(`File not found: ${err}}`);
+      throw new AppError(`Error deleting file: ${err}`, 500);
     }
   }
 }

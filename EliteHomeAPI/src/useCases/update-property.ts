@@ -34,16 +34,16 @@ export class UpdatePropertyUseCase {
   constructor(private repository: PropertiesRepository) {}
 
   async execute(
-    id: string,
+    propertyId: string,
     data: UpdatePropertyUseCaseRequest,
   ): Promise<UpdatePropertyUseCaseReply> {
-    const propertyExists = await this.repository.findById(id);
+    const propertyExists = await this.repository.findById(propertyId);
 
     if (!propertyExists) {
       throw new NotFoundError("Property not found.");
     }
 
-    const updateProperty = await this.repository.update(id, data);
+    const updateProperty = await this.repository.update(propertyId, data);
 
     return { property: updateProperty };
   }

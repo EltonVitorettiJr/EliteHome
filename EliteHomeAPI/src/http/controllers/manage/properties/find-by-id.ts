@@ -8,7 +8,7 @@ export const findById = async (
   reply: FastifyReply,
 ) => {
   const schema = z.object({
-    id: z.uuid().nonempty().nonoptional(),
+    propertyId: z.uuid().nonempty().nonoptional(),
   });
 
   const params = schema.parse(request.params);
@@ -17,7 +17,7 @@ export const findById = async (
 
   const useCase = new FindPropertyByIdUseCase(repository);
 
-  const response = await useCase.execute(params.id);
+  const response = await useCase.execute(params.propertyId);
 
   return reply.status(200).send(response);
 };

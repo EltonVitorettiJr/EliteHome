@@ -6,7 +6,7 @@ import { UpdatePropertyUseCase } from "../../../../useCases/update-property";
 
 export const update = async (request: FastifyRequest, reply: FastifyReply) => {
   const paramsSchema = z.object({
-    id: z.uuid().nonempty().nonoptional(),
+    propertyId: z.uuid().nonempty().nonoptional(),
   });
 
   const schema = z.object({
@@ -42,7 +42,7 @@ export const update = async (request: FastifyRequest, reply: FastifyReply) => {
 
   const useCase = new UpdatePropertyUseCase(repository);
 
-  const response = await useCase.execute(params.id, data);
+  const response = await useCase.execute(params.propertyId, data);
 
   return reply.status(200).send(response);
 };

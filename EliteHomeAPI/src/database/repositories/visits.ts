@@ -54,15 +54,15 @@ export class VisitsRepository {
   }
 
   async findOneVisit(id: string): Promise<Visit | undefined> {
-    const visit = await knex<VisitSchema>("visits").where({ id });
+    const [visit] = await knex<VisitSchema>("visits").where({ id });
 
-    if (visit.length === 0) {
+    if (!visit) {
       return undefined;
     }
 
-    const visitEntity = visit.map((v) => new VisitSchema(v).toEntity());
+    const visitEntity = new VisitSchema(visit as VisitSchema).toEntity();
 
-    return visitEntity.at(0);
+    return visitEntity;
   }
 
   async update(

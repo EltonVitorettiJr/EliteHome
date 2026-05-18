@@ -15,7 +15,7 @@ const config: Knex.Config = {
     directory: path.join(__dirname, "src", "database", "migration"),
   },
   seeds: {
-    directory: "./src/database/seed",
+    directory: "./src/database/seeds",
   },
 };
 

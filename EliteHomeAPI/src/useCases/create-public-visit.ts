@@ -41,11 +41,12 @@ export class CreatePublicVisitUseCase {
     );
 
     if (
-      visitExists &&
-      visitExists?.visitStatus !== "CANCELLED" &&
-      visitExists?.visitStatus !== "COMPLETED"
+      visitExists?.visitStatus === "CONFIRMED" ||
+      visitExists?.visitStatus === "INTEREST"
     ) {
-      throw new AlreadyExistsError("This visit already exists!");
+      throw new AlreadyExistsError(
+        "You already have a confirmed or pending visit for this property.",
+      );
     }
 
     const visit = await this.visitsRepository.create(data);

@@ -30,4 +30,36 @@ export class PropertyImagesRepository {
 
     return [imageEntity];
   }
+
+  async findById(id: string): Promise<Image | undefined> {
+    const [image] = await knex<ImageSchema>("property_images")
+      .where({ id })
+      .returning("*");
+
+    if (!image) {
+      return undefined;
+    }
+
+    const imageEntity = new ImageSchema(image as ImageSchema).toEntity();
+
+    return imageEntity;
+  }
+
+  async delete(id: string): Promise<void> {
+    await knex<ImageSchema>("property_images").where({ id }).delete();
+
+    return;
+  }
+
+  async getImagesByPropertyId(propertyId: string): Promise<Image[]> {
+    const images = await knex<ImageSchema>("property_images")
+      .where({ property_id: propertyId })
+      .returning("*");
+
+    const imagesEntities = images.map((image) =>
+      new ImageSchema(image as ImageSchema).toEntity(),
+    );
+
+    return imagesEntities;
+  }
 }

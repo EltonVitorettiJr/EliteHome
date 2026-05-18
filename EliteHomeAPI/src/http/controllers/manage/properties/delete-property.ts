@@ -8,7 +8,7 @@ export const deleteProperty = async (
   reply: FastifyReply,
 ) => {
   const schema = z.object({
-    id: z.uuid(),
+    propertyId: z.uuid(),
   });
 
   const data = schema.parse(request.params);
@@ -17,7 +17,7 @@ export const deleteProperty = async (
 
   const useCase = new DeletePropertyUseCase(repository);
 
-  const response = await useCase.execute(data.id);
+  const response = await useCase.execute(data.propertyId);
 
   reply.status(200).send(response);
 };

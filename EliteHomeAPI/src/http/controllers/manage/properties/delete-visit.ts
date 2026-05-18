@@ -1,5 +1,6 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
+import { PropertiesRepository } from "../../../../database/repositories/properties";
 import { VisitsRepository } from "../../../../database/repositories/visits";
 import { DeleteVisitUseCase } from "../../../../useCases/delete-visit";
 
@@ -8,16 +9,21 @@ export const deleteVisit = async (
   reply: FastifyReply,
 ) => {
   const schema = z.object({
-    id: z.uuid(),
+    propertyId: z.uuid().nonoptional(),
+    visitId: z.uuid().nonoptional(),
   });
 
   const params = schema.parse(request.params);
 
-  const repository = new VisitsRepository();
+  const visitsRepository = new VisitsRepository();
+  const propertiesRepository = new PropertiesRepository();
 
-  const useCase = new DeleteVisitUseCase(repository);
+  const useCase = new DeleteVisitUseCase(
+    visitsRepository,
+    propertiesRepository,
+  );
 
-  const response = await useCase.execute(params.id);
+  const response = await useCase.execute(params.propertyId, params.visitId);
 
   reply.status(200).send(response);
 };

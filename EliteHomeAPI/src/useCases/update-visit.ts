@@ -1,16 +1,21 @@
+import type { PropertiesRepository } from "../database/repositories/properties";
 import type { VisitsRepository } from "../database/repositories/visits";
 import type { Visit } from "../entities/visit";
 import { type VisitStatus, visitStatus } from "../enums/visit-status";
 import { NotFoundError } from "../errors/not-found-error";
 import type { MailProvider } from "../providers/mail-provider";
 
-interface UpdateVisitUseCaseRequest {
+interface UpdateVisitUseCaseDTO {
   name?: string;
   phone?: string;
   email?: string;
   date?: Date;
   visitStatus?: VisitStatus;
-  propertyId?: string;
+}
+
+interface UpdateVisitUseCaseRequest {
+  params: { visitId: string; propertyId: string };
+  data: UpdateVisitUseCaseDTO;
 }
 
 interface UpdateVisitUseCaseReply {
@@ -21,19 +26,39 @@ export class UpdateVisitUseCase {
   constructor(
     private visitsRepository: VisitsRepository,
     private mailProvider: MailProvider,
+    private propertiesRepository: PropertiesRepository,
   ) {}
 
-  async execute(
-    id: string,
-    data: UpdateVisitUseCaseRequest,
-  ): Promise<UpdateVisitUseCaseReply> {
-    const visitExists = await this.visitsRepository.findByPropertyId(id);
+  async execute({
+    params,
+    data,
+  }: UpdateVisitUseCaseRequest): Promise<UpdateVisitUseCaseReply> {
+    const propertyExists = await this.propertiesRepository.findById(
+      params.propertyId,
+    );
+
+    if (!propertyExists) {
+      throw new NotFoundError("Property not found.");
+    }
+
+    const visitExists = await this.visitsRepository.findOneVisit(
+      params.visitId,
+    );
 
     if (!visitExists) {
       throw new NotFoundError("Visit not found.");
     }
 
-    const updateVisit = await this.visitsRepository.update(id, data);
+    if (visitExists.propertyId !== params.propertyId) {
+      throw new NotFoundError(
+        "This visit does not belong to the specified property.",
+      );
+    }
+
+    const updateVisit = await this.visitsRepository.update(
+      params.visitId,
+      data,
+    );
 
     switch (data.visitStatus) {
       case visitStatus.CONFIRMED:

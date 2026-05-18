@@ -1,10 +1,10 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
+import { PropertyImagesRepository } from "../../../../database/repositories/image";
 import { PropertiesRepository } from "../../../../database/repositories/properties";
-import { VisitsRepository } from "../../../../database/repositories/visits";
-import { SearchVisitsUseCase } from "../../../../useCases/search-visits";
+import { FindPropertyImagesUseCase } from "../../../../useCases/find-property-images";
 
-export const searchVisits = async (
+export const findPropertyImages = async (
   request: FastifyRequest,
   reply: FastifyReply,
 ) => {
@@ -14,13 +14,12 @@ export const searchVisits = async (
 
   const params = paramsSchema.parse(request.params);
 
-  const visitRepository = new VisitsRepository();
-
   const propertiesRepository = new PropertiesRepository();
+  const propertyImagesRepository = new PropertyImagesRepository();
 
-  const useCase = new SearchVisitsUseCase(
-    visitRepository,
+  const useCase = new FindPropertyImagesUseCase(
     propertiesRepository,
+    propertyImagesRepository,
   );
 
   const response = await useCase.execute(params.propertyId);

@@ -151,11 +151,11 @@ export class PropertiesRepository {
       return undefined;
     }
 
-    const propertyEntity = property.map((p) =>
-      new PropertySchema(p).toEntity(),
-    );
+    const propertyEntity = new PropertySchema(
+      property[0] as PropertySchema,
+    ).toEntity();
 
-    return propertyEntity.at(0);
+    return propertyEntity;
   }
 
   async update(

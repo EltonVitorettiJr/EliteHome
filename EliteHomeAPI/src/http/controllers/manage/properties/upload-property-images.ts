@@ -9,7 +9,7 @@ export const uploadPropertyImages = async (
   reply: FastifyReply,
 ) => {
   const paramsSchema = z.object({
-    id: z.uuid(),
+    propertyId: z.uuid(),
   });
 
   const params = paramsSchema.parse(request.params);
@@ -40,7 +40,7 @@ export const uploadPropertyImages = async (
   );
 
   const response = await useCase.execute({
-    propertyId: params.id,
+    propertyId: params.propertyId,
     files: filesToUpload,
   });
 

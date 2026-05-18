@@ -9,18 +9,18 @@ export interface SearchVisitsUseCaseReply {
 
 export class SearchVisitsUseCase {
   constructor(
-    private visitRepository: VisitsRepository,
+    private visitsRepository: VisitsRepository,
     private propertiesRepository: PropertiesRepository,
   ) {}
 
   async execute(propertyId: string): Promise<SearchVisitsUseCaseReply> {
-    const propertyExists = this.propertiesRepository.findById(propertyId);
+    const propertyExists = await this.propertiesRepository.findById(propertyId);
 
     if (!propertyExists) {
       throw new NotFoundError("Property not found.");
     }
 
-    const visits = await this.visitRepository.findByPropertyId(propertyId);
+    const visits = await this.visitsRepository.findByPropertyId(propertyId);
 
     return { visits };
   }

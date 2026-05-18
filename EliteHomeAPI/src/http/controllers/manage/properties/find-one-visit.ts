@@ -1,5 +1,6 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
+import { PropertiesRepository } from "../../../../database/repositories/properties";
 import { VisitsRepository } from "../../../../database/repositories/visits";
 import { FindOneVisitUseCase } from "../../../../useCases/find-one-visit";
 
@@ -8,16 +9,22 @@ export const findOneVisit = async (
   reply: FastifyReply,
 ) => {
   const paramsSchema = z.object({
-    id: z.uuid(),
+    propertyId: z.uuid().nonoptional(),
+    visitId: z.uuid().nonoptional(),
   });
 
   const params = paramsSchema.parse(request.params);
 
-  const repository = new VisitsRepository();
+  const visitRepository = new VisitsRepository();
 
-  const useCase = new FindOneVisitUseCase(repository);
+  const propertiesRepository = new PropertiesRepository();
 
-  const response = await useCase.execute(params.id);
+  const useCase = new FindOneVisitUseCase(
+    visitRepository,
+    propertiesRepository,
+  );
+
+  const response = await useCase.execute(params.propertyId, params.visitId);
 
   reply.status(200).send(response);
 };

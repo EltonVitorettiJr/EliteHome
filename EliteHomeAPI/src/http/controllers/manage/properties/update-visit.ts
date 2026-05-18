@@ -1,5 +1,6 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
+import { PropertiesRepository } from "../../../../database/repositories/properties";
 import { VisitsRepository } from "../../../../database/repositories/visits";
 import { EtherealMailProvider } from "../../../../providers/implementations/ethereal-mail-provider";
 import { UpdateVisitUseCase } from "../../../../useCases/update-visit";
@@ -9,7 +10,8 @@ export const updateVisit = async (
   reply: FastifyReply,
 ) => {
   const paramsSchema = z.object({
-    id: z.uuid(),
+    visitId: z.uuid().nonoptional(),
+    propertyId: z.uuid().nonoptional(),
   });
 
   const schema = z.object({
@@ -27,12 +29,16 @@ export const updateVisit = async (
   const data = schema.parse(request.body);
 
   const mailProvider = new EtherealMailProvider();
+  const visitRepository = new VisitsRepository();
+  const propertiesRepository = new PropertiesRepository();
 
-  const repository = new VisitsRepository();
+  const useCase = new UpdateVisitUseCase(
+    visitRepository,
+    mailProvider,
+    propertiesRepository,
+  );
 
-  const useCase = new UpdateVisitUseCase(repository, mailProvider);
-
-  const response = await useCase.execute(params.id, data);
+  const response = await useCase.execute({ params, data });
 
   reply.status(200).send(response);
 };

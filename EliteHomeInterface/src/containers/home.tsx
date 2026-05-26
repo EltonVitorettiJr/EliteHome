@@ -1,4 +1,5 @@
 import { Bed, CreditCard, HouseIcon, MapPin } from "lucide-react";
+import { useNavigate } from "react-router";
 import midLowerImage from "../assets/foto-cachorro.jpg";
 import bottomImage from "../assets/foto-familia.jpg";
 import midImage from "../assets/foto-mansao.jpg";
@@ -8,10 +9,7 @@ import { Card } from "../components/card";
 import { Content } from "../components/content";
 
 export const Home = () => {
-  const handleSearch = () => {
-    // Lógica de busca de imóveis
-    console.log("right");
-  };
+  const navigate = useNavigate();
 
   return (
     <section>
@@ -55,7 +53,11 @@ export const Home = () => {
             />
           </div>
         </div>
-        <Button variant="primary" onClick={() => handleSearch} className="my-8">
+        <Button
+          variant="primary"
+          onClick={() => navigate("/imoveis")}
+          className="my-8"
+        >
           Buscar Imóveis
         </Button>
       </Content>
@@ -72,7 +74,7 @@ export const Home = () => {
           seja uma casa, um apartamento, em um lugar mais afastado, ou próximo
           em região metropolitana, você escolhe!
         </p>
-        <Button variant="secondary" onClick={() => handleSearch}>
+        <Button variant="secondary" onClick={() => navigate("/imoveis")}>
           Conhecer imóveis
         </Button>
       </div>
@@ -89,7 +91,7 @@ export const Home = () => {
           que é necessário para que ele possa ter uma vida saudável do jeitinho
           que você quiser.
         </p>
-        <Button variant="secondary" onClick={() => handleSearch}>
+        <Button variant="secondary" onClick={() => navigate("/imoveis")}>
           Meu pet quer conhecer
         </Button>
       </div>
@@ -103,7 +105,7 @@ export const Home = () => {
           Do seu jeito, quando quiser, onde quiser, e o quanto quiser pagar, vem
           conhecer seu novo lar!
         </p>
-        <Button variant="tertiary" onClick={() => handleSearch}>
+        <Button variant="tertiary" onClick={() => navigate("/imoveis")}>
           Conhecer novo lar
         </Button>
       </div>

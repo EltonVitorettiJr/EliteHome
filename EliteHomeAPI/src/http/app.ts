@@ -1,4 +1,5 @@
 // biome-ignore assist/source/organizeImports: <Falso positivo do Biome>
+import cors from "@fastify/cors";
 import fastifyJwt from "@fastify/jwt";
 import fastifyMultipart from "@fastify/multipart";
 import fastifyStatic from "@fastify/static";
@@ -15,6 +16,9 @@ import { userRoutes } from "./controllers/users/routes";
 
 export const app = fastify();
 
+app.register(cors, {
+  origin: true, // true para desenvolvimento
+});
 app.register(fastifyStatic, {
   root: path.resolve(__dirname, "../../uploads"),
 

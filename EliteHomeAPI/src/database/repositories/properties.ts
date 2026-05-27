@@ -1,6 +1,8 @@
+import { envs } from "../../config/envs";
 import type { Property } from "../../entities/property";
 import type { SearchPropertiesFilter } from "../../useCases/search-properties";
 import { knex } from "../index";
+import type { ImageSchema } from "../schemas/image";
 import { PropertySchema } from "../schemas/property";
 
 export class PropertiesRepository {
@@ -26,6 +28,7 @@ export class PropertiesRepository {
         latitude: property.latitude,
         longitude: property.longitude,
         description: property.description,
+        images: property.images,
         ...(property.propertyType && { property_type: property.propertyType }),
       })
       .returning("*");
@@ -81,7 +84,23 @@ export class PropertiesRepository {
 
     const properties = await query;
 
-    const propertiesEntities = properties.map((property) =>
+    if (properties.length === 0) return [];
+
+    const propertiesIds = properties.map((property) => property.id as string);
+
+    const propertiesImages = await knex<ImageSchema>("property_images").whereIn(
+      "property_id",
+      propertiesIds,
+    );
+
+    const propertiesWithImages = properties.map((property) => ({
+      ...property,
+      images: propertiesImages
+        .filter((img) => img.property_id === property.id)
+        .map((img) => ({ id: img.id as string, url: img.url })), // Map necessario para manter a tipagem de string do id
+    }));
+
+    const propertiesEntities = propertiesWithImages.map((property) =>
       new PropertySchema(property).toEntity(),
     );
 
@@ -137,7 +156,30 @@ export class PropertiesRepository {
 
     const properties = await query;
 
-    const propertiesEntities = properties.map((p) =>
+    if (properties.length === 0) {
+      return [];
+    }
+
+    const propertiesIds = properties.map((p) => p.id as string);
+
+    const allImages = await knex<ImageSchema>("property_images").whereIn(
+      "property_id",
+      propertiesIds,
+    );
+
+    const propertiesWithImages = properties.map((p) => {
+      return {
+        ...p,
+        images: allImages
+          .filter((img) => img.property_id === p.id)
+          .map((img) => ({
+            id: img.id as string,
+            url: `${envs.AWS_ENDPOINT_URL}/elitehome-images/${img.url}`,
+          })), // Map necessario para manter a tipagem de string do id
+      };
+    });
+
+    const propertiesEntities = propertiesWithImages.map((p) =>
       new PropertySchema(p).toEntity(),
     );
 
@@ -195,6 +237,7 @@ export class PropertiesRepository {
         ...(property.latitude && { latitude: property.latitude }),
         ...(property.longitude && { longitude: property.longitude }),
         ...(property.description && { description: property.description }),
+        ...(property.images && { images: property.images }),
         ...(property.propertyType && { property_type: property.propertyType }),
       })
       .where({ id })

@@ -22,6 +22,7 @@ interface PropertyProps {
   longitude: number;
   propertyType?: PropertyType;
   description?: string;
+  images?: { id: string; url: string }[];
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -48,6 +49,7 @@ export class Property {
   public longitude: number;
   public propertyType?: PropertyType;
   public description?: string;
+  public images?: { id: string; url: string }[];
   public createdAt?: Date;
   public updatedAt?: Date;
 
@@ -73,6 +75,7 @@ export class Property {
     longitude,
     propertyType,
     description,
+    images,
     createdAt,
     updatedAt,
   }: PropertyProps) {
@@ -95,8 +98,9 @@ export class Property {
     this.size = size;
     this.latitude = latitude;
     this.longitude = longitude;
-    this.propertyType = propertyType
+    this.propertyType = propertyType;
     this.description = description;
+    this.images = images;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }

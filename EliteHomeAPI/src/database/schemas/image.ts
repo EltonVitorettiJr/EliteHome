@@ -29,7 +29,7 @@ export class ImageSchema {
     return new Image({
       id,
       property_id,
-      url: url,
+      url,
       created_at,
       updated_at,
     });

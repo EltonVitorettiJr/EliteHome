@@ -23,6 +23,7 @@ interface PropertySchemaProps {
   longitude: number;
   property_type?: PropertyType;
   description?: string;
+  images?: { id: string; url: string }[];
   created_at?: string;
   updated_at?: string;
 }
@@ -49,6 +50,7 @@ export class PropertySchema {
   public longitude: number;
   public property_type?: PropertyType;
   public description?: string;
+  public images?: { id: string; url: string }[];
   public created_at?: string;
   public updated_at?: string;
 
@@ -74,6 +76,7 @@ export class PropertySchema {
     longitude,
     property_type,
     description,
+    images,
     created_at,
     updated_at,
   }: PropertySchemaProps) {
@@ -98,6 +101,7 @@ export class PropertySchema {
     this.longitude = longitude;
     this.property_type = property_type;
     this.description = description;
+    this.images = images;
     this.created_at = created_at;
     this.updated_at = updated_at;
   }
@@ -125,6 +129,7 @@ export class PropertySchema {
       longitude,
       property_type,
       description,
+      images,
       created_at,
       updated_at,
     } = this;
@@ -151,6 +156,7 @@ export class PropertySchema {
       longitude,
       description,
       propertyType: property_type,
+      images: images ? images : [],
       createdAt: created_at ? new Date(created_at) : undefined,
       updatedAt: updated_at ? new Date(updated_at) : undefined,
     });

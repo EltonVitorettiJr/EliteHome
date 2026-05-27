@@ -24,6 +24,14 @@ export class UploadPropertyImagesUseCase {
       throw new AppError("A property cannot have more than 10 images.", 422);
     }
 
+    const MAX_SIZE_IN_BYTES = 5 * 1024 * 1024; // 5MB
+
+    for (const file of files) {
+      if (file.fileBuffer.length > MAX_SIZE_IN_BYTES) {
+        throw new AppError(`File ${file.fileName} size limit exceeded.`, 413);
+      }
+    }
+
     const uploadedImagesUrls = [];
 
     for (const file of files) {

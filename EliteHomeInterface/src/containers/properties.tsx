@@ -24,6 +24,7 @@ interface PublicPropertyProps {
   size: number;
   latitude: number;
   longitude: number;
+  images: { id: string; url: string }[];
   propertyType: PropertyType;
   description: string;
 }
@@ -52,7 +53,7 @@ export const Properties = () => {
         </p>
         <p className="text-md">para alugar em Setor Marista, Goiânia/GO</p>
       </div>
-      <div className="flex flex-wrap gap-6">
+      <div className="flex flex-wrap">
         {publicProperties.map((property) => (
           <PropertyCard key={property.id} {...property} />
         ))}

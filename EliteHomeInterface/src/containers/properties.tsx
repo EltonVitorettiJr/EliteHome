@@ -1,6 +1,8 @@
+import { MapPin, SlidersHorizontalIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Header } from "../components/header";
 import { PropertyCard } from "../components/property-card";
+import { SideBar } from "../components/side-bar";
 import { api } from "../services/api";
 import type { PropertyType } from "../types/property";
 
@@ -47,6 +49,14 @@ export const Properties = () => {
   return (
     <div>
       <Header />
+
+      <div className="px-2 py-3 flex justify-between items-center border border-gray-200 mx-4">
+        <MapPin size={26} />
+        <span className="text-lg">Localização</span>
+        <SlidersHorizontalIcon size={26} />
+      </div>
+      <SideBar className="hidden md:block" />
+
       <div className="px-4">
         <p className="text-xl mb-1.5">
           <strong>09 casas e apartamentos encontrados</strong>

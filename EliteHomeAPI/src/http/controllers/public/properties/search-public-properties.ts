@@ -22,7 +22,7 @@ export const searchPublicProperties = async (
     minRooms: z.coerce.number().optional(),
     minBathrooms: z.coerce.number().optional(),
     propertyType: z
-      .enum(["APARTMENT", "HOUSE", "TOWNHOUSE", "STUDIO"])
+      .array(z.enum(["APARTMENT", "HOUSE", "TOWNHOUSE", "STUDIO"]))
       .optional(),
     page: z.coerce.number().min(1).default(1),
     limit: z.coerce.number().min(1).max(50).default(10),

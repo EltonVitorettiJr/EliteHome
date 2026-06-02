@@ -1,16 +1,26 @@
+import { XIcon } from "lucide-react";
 import { type HTMLAttributes, useState } from "react";
-import { propertyType } from "../types/property";
+import { type PropertyType, propertyType } from "../types/property";
 import { Button } from "./button";
 import { InputNumber } from "./input-number";
+import { propertyTypeMap } from "./property-card";
 
 interface SideBarProps extends HTMLAttributes<HTMLFormElement> {
   className?: string;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
 }
 
-export const SideBar = ({ className, ...props }: SideBarProps) => {
+export const SideBar = ({
+  className,
+  isOpen,
+  setIsOpen,
+  ...props
+}: SideBarProps) => {
   const roomOptions = [1, 2, 3, 4];
   const garageOptions = [0, 1, 2, 3, 4];
   const bathroomsOptions = [1, 2, 3, 4];
+  const propertyTypeOptions = Object.values(propertyType);
 
   const ACTIVE_TAB_TYPES = {
     ALUGAR: "ALUGAR",
@@ -23,7 +33,7 @@ export const SideBar = ({ className, ...props }: SideBarProps) => {
     rentValue: false,
     minValue: 500,
     maxValue: 20000,
-    propertyType: propertyType.APARTMENT,
+    propertyType: [] as PropertyType[],
     numberOfRooms: 3,
     garageSlots: 2,
     numberOfBathrooms: 2,
@@ -39,13 +49,13 @@ export const SideBar = ({ className, ...props }: SideBarProps) => {
 
     if (tab === ACTIVE_TAB_TYPES.COMPRAR) {
       setFormData({
-        ...defaultFormValues,
+        ...formData,
         isRent: false,
         totalValue: false,
         rentValue: false,
       });
     } else {
-      setFormData({ ...defaultFormValues, isRent: true, totalValue: true });
+      setFormData({ ...formData, isRent: true, totalValue: true });
     }
   };
 
@@ -58,8 +68,14 @@ export const SideBar = ({ className, ...props }: SideBarProps) => {
   };
 
   return (
-    <form className={`${className}`} {...props}>
-      <fieldset className="flex gap-4 px-4">
+    <form className={`${className} bg-base-white top-0`} {...props}>
+      <div className="flex justify-end items-center px-4 py-2">
+        <button type="button" onClick={() => setIsOpen(false)}>
+          <XIcon size={26} />
+        </button>
+      </div>
+
+      <fieldset className="flex gap-4 px-4 py-2">
         <button
           type="button"
           onClick={() => handleTabClick(ACTIVE_TAB_TYPES.ALUGAR)}
@@ -151,6 +167,45 @@ export const SideBar = ({ className, ...props }: SideBarProps) => {
             span="R$"
             value={formData.maxValue}
           />
+        </div>
+      </div>
+
+      <div className="px-4 mt-4">
+        <h3 className="font-bold text-base-black-blue mb-2">Tipo de imóvel</h3>
+        <div className="grid grid-cols-2 gap-y-2 gap-x-4">
+          {propertyTypeOptions.map((option) => {
+            const isChecked = formData.propertyType.includes(option);
+
+            return (
+              <div key={option} className="flex gap-2 items-center">
+                <input
+                  type="checkbox"
+                  id={`type-${option}`}
+                  checked={isChecked}
+                  onChange={() => {
+                    if (isChecked) {
+                      // Se já tá marcado, FILTRA o array tirando essa opção
+                      setFormData({
+                        ...formData,
+                        propertyType: formData.propertyType.filter(
+                          (type) => type !== option,
+                        ),
+                      });
+                    } else {
+                      // Se não tá marcado, ADICIONA no array mantendo os que já estavam lá
+                      setFormData({
+                        ...formData,
+                        propertyType: [...formData.propertyType, option],
+                      });
+                    }
+                  }}
+                />
+                <label htmlFor={`type-${option}`}>
+                  {propertyTypeMap[option] || option}
+                </label>
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -272,15 +327,15 @@ export const SideBar = ({ className, ...props }: SideBarProps) => {
       <div className="flex justify-between mt-4 border-t border-gray-200 p-4">
         <Button
           type="button"
-          onClick={() => handleClear}
+          onClick={handleClear}
           variant="secondary"
           className="text-brand-primary w-fit py-1 px-2"
         >
           Limpar
         </Button>
         <Button
-          type="submit"
-          onClick={() => handleSubmit}
+          type="button"
+          onClick={handleSubmit}
           variant="primary"
           className="w-fit py-1 px-2"
         >

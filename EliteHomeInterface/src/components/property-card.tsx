@@ -11,10 +11,10 @@ interface PropertyCardProps {
   address: string;
 }
 
-const propertyTypeMap: Record<PropertyType, string> = {
+export const propertyTypeMap: Record<PropertyType, string> = {
   [propertyType.APARTMENT]: "Apartamento",
   [propertyType.HOUSE]: "Casa",
-  [propertyType.TOWNHOUSE]: "Casa de Campo",
+  [propertyType.TOWNHOUSE]: "Casa de Condomínio",
   [propertyType.STUDIO]: "Estudio",
 };
 

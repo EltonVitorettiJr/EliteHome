@@ -35,6 +35,7 @@ export const Properties = () => {
   const [publicProperties, setPublicProperties] = useState<
     PublicPropertyProps[]
   >([]);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const fetchPublicProperties = async () => {
@@ -53,11 +54,17 @@ export const Properties = () => {
       <div className="px-2 py-3 flex justify-between items-center border border-gray-200 mx-4">
         <MapPin size={26} />
         <span className="text-lg">Localização</span>
-        <SlidersHorizontalIcon size={26} />
+        <button type="button" onClick={() => setIsOpen(!isOpen)}>
+          <SlidersHorizontalIcon size={26} />
+        </button>
       </div>
-      <SideBar className="hidden md:block" />
+      <SideBar
+        className={`md:block ${isOpen ? "absolute" : "hidden"}`}
+        setIsOpen={setIsOpen}
+        isOpen={isOpen}
+      />
 
-      <div className="px-4">
+      <div className="px-4 mt-3">
         <p className="text-xl mb-1.5">
           <strong>09 casas e apartamentos encontrados</strong>
         </p>

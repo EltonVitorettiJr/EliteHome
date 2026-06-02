@@ -16,7 +16,7 @@ export interface SearchPropertiesFilter {
   maxTotalValue?: number;
   minRooms?: number;
   minBathrooms?: number;
-  propertyType?: PropertyType;
+  propertyType?: PropertyType[];
   page?: number;
   limit?: number;
 }

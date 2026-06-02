@@ -77,7 +77,8 @@ export class PropertiesRepository {
         queryBuilder.where("number_of_bathrooms", ">=", minBathrooms);
       if (minRooms) queryBuilder.where("number_of_rooms", ">=", minRooms);
 
-      if (propertyType) queryBuilder.where("property_type", "=", propertyType);
+      if (propertyType && propertyType.length > 0)
+        queryBuilder.whereIn("property_type", propertyType);
     });
 
     query.limit(limit).offset(offset);
@@ -149,7 +150,8 @@ export class PropertiesRepository {
         queryBuilder.where("number_of_bathrooms", ">=", minBathrooms);
       if (minRooms) queryBuilder.where("number_of_rooms", ">=", minRooms);
 
-      if (propertyType) queryBuilder.where("property_type", "=", propertyType);
+      if (propertyType && propertyType.length > 0)
+        queryBuilder.whereIn("property_type", propertyType);
     });
 
     query.limit(limit).offset(offset);

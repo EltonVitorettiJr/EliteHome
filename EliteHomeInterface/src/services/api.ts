@@ -6,4 +6,8 @@ export const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  // Evita que o axios transforme os parâmetros em query string
+  paramsSerializer: {
+    indexes: null
+  }
 });

@@ -4,9 +4,10 @@ import { Header } from "../components/header";
 import { PropertyCard } from "../components/property-card";
 import { SideBar } from "../components/side-bar";
 import { api } from "../services/api";
-import type { PropertyType } from "../types/property";
+import { searchPublicProperties } from "../services/properties/search-public-properties";
+import type { PropertyType, SearchPropertiesFilter } from "../types/property";
 
-interface PublicPropertyProps {
+export interface PublicPropertyProps {
   id: string;
   name: string;
   address: string;
@@ -47,6 +48,12 @@ export const Properties = () => {
     fetchPublicProperties();
   }, []);
 
+  const handleFilterProperties = async (filters: SearchPropertiesFilter) => {
+    const response = await searchPublicProperties(filters);
+
+    setPublicProperties(response.data);
+  };
+
   return (
     <div>
       <Header />
@@ -62,6 +69,7 @@ export const Properties = () => {
         className={`md:block ${isOpen ? "absolute" : "hidden"}`}
         setIsOpen={setIsOpen}
         isOpen={isOpen}
+        onFilter={handleFilterProperties}
       />
 
       <div className="px-4 mt-3">

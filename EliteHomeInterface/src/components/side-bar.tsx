@@ -1,6 +1,10 @@
 import { XIcon } from "lucide-react";
 import { type HTMLAttributes, useState } from "react";
-import { type PropertyType, propertyType } from "../types/property";
+import {
+  type PropertyType,
+  propertyType,
+  type SearchPropertiesFilter,
+} from "../types/property";
 import { Button } from "./button";
 import { InputNumber } from "./input-number";
 import { propertyTypeMap } from "./property-card";
@@ -9,12 +13,14 @@ interface SideBarProps extends HTMLAttributes<HTMLFormElement> {
   className?: string;
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  onFilter: (filters: SearchPropertiesFilter) => void;
 }
 
 export const SideBar = ({
   className,
   isOpen,
   setIsOpen,
+  onFilter,
   ...props
 }: SideBarProps) => {
   const roomOptions = [1, 2, 3, 4];
@@ -28,21 +34,27 @@ export const SideBar = ({
   };
 
   const defaultFormValues = {
+    // --- ESTADOS EXCLUSIVOS DA TELA (UI Helpers) ---
     isRent: true,
     totalValue: true,
     rentValue: false,
     minValue: 500,
     maxValue: 20000,
+
+    // --- ESTADOS COMPARTILHADOS (Nomes exatos do Backend) ---
     propertyType: [] as PropertyType[],
-    numberOfRooms: 3,
+    minRooms: 3, // 🌟 Corrigido (era numberOfRooms)
+    minBathrooms: 2, // 🌟 Corrigido (era numberOfBathrooms)
+
+    // --- 🚨 CAMPOS FANTASMAS (Estão no Front, mas faltam no Zod) ---
     garageSlots: 2,
-    numberOfBathrooms: 2,
     minArea: 20,
     maxArea: 1000,
   };
 
   const [activeTab, setActiveTab] = useState<string>(ACTIVE_TAB_TYPES.ALUGAR);
-  const [formData, setFormData] = useState(defaultFormValues);
+  const [formData, setFormData] =
+    useState<SearchPropertiesFilter>(defaultFormValues);
 
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
@@ -63,8 +75,28 @@ export const SideBar = ({
     setFormData(defaultFormValues);
   };
 
-  const handleSubmit = () => {
-    console.log(formData);
+  const handleSubmit = async () => {
+    // Montamos o pacote limpo pro backend
+    // biome-ignore lint/suspicious/noExplicitAny: <Tipo any para permitir a tradução de vários tipos>
+    const queryParams: Record<string, any> = {
+      isRent: formData.isRent,
+      minRooms: formData.minRooms > 0 ? formData.minRooms : undefined,
+      minBathrooms:
+        formData.minBathrooms > 0 ? formData.minBathrooms : undefined,
+      propertyType:
+        formData.propertyType.length > 0 ? formData.propertyType : undefined,
+    };
+
+    // Traduzimos os checkboxes de preço para o formato da API
+    if (formData.totalValue) {
+      queryParams.maxTotalValue = formData.maxValue;
+    } else if (formData.rentValue) {
+      queryParams.maxRentValue = formData.maxValue;
+    }
+
+    onFilter(formData);
+
+    setIsOpen(false);
   };
 
   return (
@@ -74,6 +106,8 @@ export const SideBar = ({
           <XIcon size={26} />
         </button>
       </div>
+
+      {/* COMPRAR OU ALUGAR IMÓVEL */}
 
       <fieldset className="flex gap-4 px-4 py-2">
         <button
@@ -103,6 +137,8 @@ export const SideBar = ({
           Comprar
         </button>
       </fieldset>
+
+      {/* VALOR TOTAL E PARCIAL DE ALUGUEL */}
 
       <div className="px-4 mt-4 flex flex-col gap-2">
         {activeTab === ACTIVE_TAB_TYPES.ALUGAR && (
@@ -145,6 +181,8 @@ export const SideBar = ({
           </div>
         )}
 
+        {/* CUSTO DO IMÓVEL */}
+
         <div className="flex gap-4 mt-2">
           <InputNumber
             label="Mínimo"
@@ -169,6 +207,8 @@ export const SideBar = ({
           />
         </div>
       </div>
+
+      {/* TIPO DE IMÓVEL */}
 
       <div className="px-4 mt-4">
         <h3 className="font-bold text-base-black-blue mb-2">Tipo de imóvel</h3>
@@ -209,19 +249,19 @@ export const SideBar = ({
         </div>
       </div>
 
+      {/* QUARTOS */}
+
       <div className="px-4 mt-4">
         <h3 className="font-bold text-base-black-blue mb-2">Quartos</h3>
         <div className="flex gap-2">
           {roomOptions.map((option) => {
-            const isSelected = formData.numberOfRooms === option;
+            const isSelected = formData.minRooms === option;
 
             return (
               <button
                 key={option}
                 type="button"
-                onClick={() =>
-                  setFormData({ ...formData, numberOfRooms: option })
-                }
+                onClick={() => setFormData({ ...formData, minRooms: option })}
                 className={`px-3 py-1 rounded-full border transition-colors
                   ${
                     isSelected
@@ -230,12 +270,14 @@ export const SideBar = ({
                   }
                 `}
               >
-                {option === 4 ? "4+" : option}
+                {`${option}+`}
               </button>
             );
           })}
         </div>
       </div>
+
+      {/* VAGAS DE GARAGEM */}
 
       <div className="px-4 mt-4">
         <h3 className="font-bold text-base-black-blue mb-2">
@@ -260,25 +302,27 @@ export const SideBar = ({
                   }
                 `}
               >
-                {option === 0 ? "Tanto faz" : option === 4 ? "4+" : option}
+                {option === 0 ? "Tanto faz" : `${option}+`}
               </button>
             );
           })}
         </div>
       </div>
 
+      {/* MÍNIMO DE BANHEIROS */}
+
       <div className="px-4 mt-4">
         <h3 className="font-bold text-base-black-blue mb-2">Banheiros</h3>
         <div className="flex gap-2">
           {bathroomsOptions.map((option) => {
-            const isSelected = formData.numberOfBathrooms === option;
+            const isSelected = formData.minBathrooms === option;
 
             return (
               <button
                 key={option}
                 type="button"
                 onClick={() =>
-                  setFormData({ ...formData, numberOfBathrooms: option })
+                  setFormData({ ...formData, minBathrooms: option })
                 }
                 className={`px-3 py-1 rounded-full border transition-colors
                   ${
@@ -288,13 +332,14 @@ export const SideBar = ({
                   }
                 `}
               >
-                {option === 4 ? "4+" : option}
+                {`${option}+`}
               </button>
             );
           })}
         </div>
       </div>
 
+      {/* INPUTS DE ÁREA */}
       <div className="px-4 mt-4">
         <h3 className="font-bold text-base-black-blue mb-2">Área</h3>
         <div className="flex gap-4 mt-2">

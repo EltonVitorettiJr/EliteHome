@@ -74,7 +74,12 @@ export const Properties = () => {
 
       <div className="px-4 mt-3">
         <p className="text-xl mb-1.5">
-          <strong>09 casas e apartamentos encontrados</strong>
+          <strong>
+            {publicProperties.length > 9
+              ? publicProperties.length
+              : `0${publicProperties.length}`}{" "}
+            casas e apartamentos encontrados
+          </strong>
         </p>
         <p className="text-md">para alugar em Setor Marista, Goiânia/GO</p>
       </div>

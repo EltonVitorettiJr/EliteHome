@@ -16,6 +16,10 @@ interface SideBarProps extends HTMLAttributes<HTMLFormElement> {
   onFilter: (filters: SearchPropertiesFilter) => void;
 }
 
+interface QueryParamsTranslator {
+  [key: string]: string | number | boolean | PropertyType[] | undefined;
+}
+
 export const SideBar = ({
   className,
   isOpen,
@@ -76,9 +80,7 @@ export const SideBar = ({
   };
 
   const handleSubmit = async () => {
-    // Montamos o pacote limpo pro backend
-    // biome-ignore lint/suspicious/noExplicitAny: <Tipo any para permitir a tradução de vários tipos>
-    const queryParams: Record<string, any> = {
+    const queryParams: QueryParamsTranslator = {
       isRent: formData.isRent,
       minRooms: formData.minRooms > 0 ? formData.minRooms : undefined,
       minBathrooms:
@@ -107,7 +109,7 @@ export const SideBar = ({
         </button>
       </div>
 
-      {/* COMPRAR OU ALUGAR IMÓVEL */}
+      {/* RENT OR BUY */}
 
       <fieldset className="flex gap-4 px-4 py-2">
         <button
@@ -138,7 +140,7 @@ export const SideBar = ({
         </button>
       </fieldset>
 
-      {/* VALOR TOTAL E PARCIAL DE ALUGUEL */}
+      {/* TOTAL VALUE AND PARCIAL RENT VALUE */}
 
       <div className="px-4 mt-4 flex flex-col gap-2">
         {activeTab === ACTIVE_TAB_TYPES.ALUGAR && (
@@ -181,7 +183,7 @@ export const SideBar = ({
           </div>
         )}
 
-        {/* CUSTO DO IMÓVEL */}
+        {/* PROPERTY VALUE */}
 
         <div className="flex gap-4 mt-2">
           <InputNumber
@@ -208,7 +210,7 @@ export const SideBar = ({
         </div>
       </div>
 
-      {/* TIPO DE IMÓVEL */}
+      {/* PROPERTY TYPES */}
 
       <div className="px-4 mt-4">
         <h3 className="font-bold text-base-black-blue mb-2">Tipo de imóvel</h3>
@@ -249,7 +251,7 @@ export const SideBar = ({
         </div>
       </div>
 
-      {/* QUARTOS */}
+      {/* ROOMS */}
 
       <div className="px-4 mt-4">
         <h3 className="font-bold text-base-black-blue mb-2">Quartos</h3>
